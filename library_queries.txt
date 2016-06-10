@@ -1,0 +1,26 @@
+--How many copies of the book titled The Lost Tribe 
+--are owned by the library branch whose name
+--is "Sharpstown"?
+SELECT bc.No_of_Copies, b.Title, lb.BranchName
+FROM Library_Branch lb
+INNER JOIN Book_Copies bc ON lb.BranchId = bc.BranchId
+INNER JOIN Book b ON b.BookId = bc.BookId
+WHERE b.Title = 'The Lost Tribe'
+AND lb.BranchName = 'Sharpstown'
+
+--How many copies of the book titled The Lost Tribe 
+--are owned by each library branch?
+SELECT bc.No_of_Copies, b.Title, lb.BranchName
+FROM Library_Branch lb
+INNER JOIN Book_Copies bc ON lb.BranchId = bc.BranchId
+INNER JOIN Book b ON b.BookId = bc.BookId
+WHERE b.Title = 'The Lost Tribe'
+
+--Retrieve the names of all borrowers who do not have any books checked out.
+SELECT b.CardNo,b.Name
+FROM Borrower b
+FULL OUTER JOIN Book_Loans bl 
+ON b.CardNo = bl.CardNo
+WHERE b.CardNo IS NULL OR bl.CardNo IS NULL
+
+
