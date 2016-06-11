@@ -25,7 +25,7 @@ WHERE b.CardNo IS NULL OR bl.CardNo IS NULL
 
 --4. For each book that is loaned out from the "Sharpstown" branch and whose DueDate is today,
 --retrieve the book title, the borrower's name, and the borrower's address.
-SELECT lb.BranchName 'Branch', bl.DueDate 'Due TODAY', bk.title 'Book Title', bo.Name 'Borrower Name', bo.[Address] 'Borrower Address'
+SELECT bk.title 'This book is ', bl.DueDate 'due TODAY', lb.BranchName 'at this Branch', bo.Name 'by this borrower', bo.[Address] 'who lives here.'
 FROM Book bk
 INNER JOIN Book_Loans bl ON bl.BookId = bk.BookId
 INNER JOIN Borrower bo ON bo.CardNo = bl.CardNo
@@ -52,4 +52,10 @@ ORDER BY 3 DESC
 
 --7. For each book by "Stephen King", retrieve the title and the number of
 --copies owned by the library branch whose name is "Central"
-
+SELECT sum( bc.No_Of_Copies) '# Copies of', bk.Title 'this book ', ba.AuthorName 'written by', lb.BranchName 'owned by this branch'
+FROM Book_Copies bc
+INNER JOIN Book bk ON bk.BookId = bc.BookId
+INNER JOIN Book_Authors ba ON bk.BookId = ba.BookId
+INNER JOIN Library_Branch lb ON lb.BranchId = bc.BranchId
+WHERE ba.AuthorName = 'Stephen King' AND bc.BranchId = 13000
+GROUP BY bk.Title, bc.No_Of_Copies,lb.BranchName,ba.AuthorName

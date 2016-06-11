@@ -1,9 +1,9 @@
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE [name] = 'dbTechAcadLibrary')
-  PRINT 'CREATING dbTechAcadLibrary'
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE [name] = 'dbTechAcadLibrary')
-  CREATE DATABASE dbTechAcadLibrary
-  --PRINT 'dbTechAcadLibrary Created'
-  GO
+  BEGIN
+	CREATE DATABASE dbTechAcadLibrary
+	PRINT 'dbTechAcadLibrary Created'
+	--GO
+  END
 
 USE dbTechAcadLibrary
 
@@ -12,116 +12,134 @@ CREATE SCHEMA [TechAcad] AUTHORIZATION [dbo]
 GO
 */
 
---Create TABLES if 'NOT EXISTS'
+--Create TABLES 
      
 IF object_id('Publisher','U') IS NOT NULL
-	DROP TABLE Publisher
+	BEGIN
+		DROP TABLE Publisher
+		--GO
+	END
+
+CREATE TABLE Publisher
+(
+Name varchar(50) PRIMARY KEY NOT NULL,
+Address varchar(50),
+Phone nchar(10)
+)	
+PRINT 'dbo.Publisher Created'
 GO
-	CREATE TABLE Publisher
-    (
-    Name varchar(50) PRIMARY KEY NOT NULL,
-    Address varchar(50),
-    Phone nchar(10)
-    )	
-GO
-    PRINT 'dbo.Publisher Created'
 
 IF object_id('Book','U') IS NOT NULL
-	DROP TABLE Book
+	BEGIN
+		DROP TABLE Book
+		--GO
+	END
+CREATE TABLE Book
+(
+BookId int PRIMARY KEY NOT NULL IDENTITY(1,1),
+Title varchar(50) NOT NULL,
+PublisherName varchar(50) NOT NULL,
+FOREIGN KEY(PublisherName) REFERENCES Publisher(Name) 
+ON UPDATE CASCADE
+ON DELETE CASCADE
+)	
+PRINT 'dbo.Book Created'
 GO
-    CREATE TABLE Book
-    (
-    BookId int PRIMARY KEY NOT NULL IDENTITY(1,1),
-    Title varchar(50) NOT NULL,
-    PublisherName varchar(50) NOT NULL,
-	FOREIGN KEY(PublisherName) REFERENCES Publisher(Name) 
-	ON UPDATE CASCADE
-	ON DELETE CASCADE
-    )	
-    PRINT 'dbo.Book Created'
-    GO
 
 	
 IF object_id('Library_Branch','U') IS NOT NULL 
-	DROP TABLE Library_Branch
-GO
-    CREATE TABLE Library_Branch
-    (
-    BranchId int PRIMARY KEY NOT NULL IDENTITY(11000,1000),
-    BranchName varchar(50) NOT NULL,
-    [Address] varchar(50)
-    )	
-    PRINT 'dbo.Library_Branch Created'
+	BEGIN
+		DROP TABLE Library_Branch
+		--GO
+	END
+CREATE TABLE Library_Branch
+(
+BranchId int PRIMARY KEY NOT NULL IDENTITY(11000,1000),
+BranchName varchar(50) NOT NULL,
+[Address] varchar(50)
+)	
+PRINT 'dbo.Library_Branch Created'
 GO
      
 
 IF object_id('Borrower','U') IS NOT NULL
-	DROP TABLE Borrower
-GO
-    CREATE TABLE Borrower
-    (
-    CardNo int PRIMARY KEY NOT NULL IDENTITY(1000,1),
-    Name varchar(50) NOT NULL,
-    [Address] varchar(50),
-    Phone nchar(10) 
-	)	
-    PRINT 'dbo.Borrower Created'
-    GO     
+	BEGIN
+		DROP TABLE Borrower
+		--GO
+	END
+CREATE TABLE Borrower
+(
+CardNo int PRIMARY KEY NOT NULL IDENTITY(1000,1),
+Name varchar(50) NOT NULL,
+[Address] varchar(50),
+Phone nchar(10) 
+)	
+PRINT 'dbo.Borrower Created'
+GO     
 
 IF object_id('Book_Copies','U') IS NOT NULL
-	DROP TABLE Book_Copies
+	BEGIN
+		DROP TABLE Book_Copies
+		--GO
+	END
+
+CREATE TABLE Book_Copies
+(
+BookId int NOT NULL,
+BranchId int NOT NULL,
+No_Of_Copies int NOT NULL,
+FOREIGN KEY(BookId) REFERENCES Book(BookId)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+FOREIGN KEY(BranchId) REFERENCES Library_Branch(BranchId)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+)	
+PRINT 'dbo.Book_Copies Created'
 GO
-    CREATE TABLE Book_Copies
-    (
-    BookId int NOT NULL,
-    BranchId int NOT NULL,
-    No_Of_Copies int NOT NULL,
-	FOREIGN KEY(BookId) REFERENCES Book(BookId)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE,
-	FOREIGN KEY(BranchId) REFERENCES Library_Branch(BranchId)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE
-    )	
-    PRINT 'dbo.Book_Copies Created'
-    GO
      
 IF object_id('Book_Authors','U') IS NOT NULL
-	DROP TABLE Book_Authors
+	BEGIN
+		DROP TABLE Book_Authors
+		--GO
+	END
+
+CREATE TABLE Book_Authors
+(
+BookId int NOT NULL,
+AuthorName varchar(50) NOT NULL,
+FOREIGN KEY(BookId) REFERENCES Book(BookId)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+)	
+PRINT 'dbo.Book_Authors Created'
 GO
-    CREATE TABLE Book_Authors
-    (
-    BookId int NOT NULL,
-    AuthorName varchar(50) NOT NULL,
-	FOREIGN KEY(BookId) REFERENCES Book(BookId)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE
-    )	
-    PRINT 'dbo.Book_Authors Created'
-    GO
 	     
 IF object_id('Book_Loans','U') IS NOT NULL
-	DROP TABLE Book_Loans
+	BEGIN
+		DROP TABLE Book_Loans
+		--GO
+	END
+
+CREATE TABLE Book_Loans
+(
+BookId int NOT NULL,
+BranchId int NOT NULL,
+CardNo int NOT NULL,
+DateOut date,
+DueDate date,
+FOREIGN KEY(BookId) REFERENCES Book(BookId)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+FOREIGN KEY(BranchId) REFERENCES Library_Branch(BranchId)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+FOREIGN KEY(CardNo) REFERENCES Borrower(CardNo)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+)	
 GO
-	CREATE TABLE Book_Loans
-	(
-	BookId int NOT NULL,
-	BranchId int NOT NULL,
-	CardNo int NOT NULL,
-	DateOut date,
-	DueDate date,
-	FOREIGN KEY(BookId) REFERENCES Book(BookId)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE,
-	FOREIGN KEY(BranchId) REFERENCES Library_Branch(BranchId)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE,
-	FOREIGN KEY(CardNo) REFERENCES Borrower(CardNo)
-	ON UPDATE CASCADE
-	ON DELETE CASCADE
-	)	
-GO
-	PRINT 'dbo.Book_Loans Created'
+PRINT 'dbo.Book_Loans Created'
 
 
 --Populate tables
@@ -150,7 +168,7 @@ VALUES
 ('The da Vinci Code', 'Penguin'),
 ('Alice in Wonderland', 'Penguin'),
 ('Divergent', 'Harper'),
-('Dorian Gray', 'Harper'),
+('The Picture of Dorian Gray', 'Harper'),
 ('Lord of the Flies', 'Harper'),
 ('Ender''s Game', 'Harper'),
 ('The Alchemist', 'Penguin'),
@@ -159,7 +177,8 @@ VALUES
 ('Jane Eyre', 'Hachette'),
 ('Charlotte''s Web', 'Penguin'),
 ('The Stand', 'Hachette'),
-('City of Bones', 'Harper')
+('City of Bones', 'Harper'),
+('11/22/63', 'Hachette')
 PRINT 'dbo.Books populated'
 
 INSERT INTO Library_Branch (BranchName, [Address])
@@ -172,17 +191,34 @@ PRINT 'dbo.Library_Branch populated'
 
 INSERT INTO Book_Authors (BookId, AuthorName)
 VALUES 
+(1,'Mark Lee'),
 (2,'Margaret Mitchell'),
 (3,'Suzanne Collins'),
 (4,'Harper Lee'),
-(5, 'Jane Austen'),
-(6, 'Stephenie Meyer'),
-(7, 'George Orwell'),
-(8, 'Markus Zusak'),
-(9, 'Shel Silverstein'),
-(10, 'Douglas Adams'),
-(11, 'John Green'),
-(26, 'Stephen King')
+(5,'Jane Austen'),
+(6,'Stephenie Meyer'),
+(7,'George Orwell'),
+(8,'Markus Zusak'),
+(9,'Shel Silverstein'),
+(10,'Douglas Adams'),
+(11,'John Green'),
+(12,'JRR Tolkien'),
+(13,'JRR Tolkien'),
+(14,'Emily Bronte'),
+(15,'Dan Brown'),
+(16,'Lewis Carroll'),
+(17,'Veronica Roth'),
+(18,'Oscar Wilde'),
+(19,'William Golding'),
+(20,'Orson Scott Card'),
+(21,'Paulo Coelho'),
+(22,'Audrey Niffenegger'),
+(23,'Fyodor Dostoyevsky'),
+(24,'Charlotte Bronte'),
+(25,'EB White'),
+(26,'Stephen King'),
+(27,'Casandra Clare'),
+(28,'Stephen King')
 PRINT 'dbo.Authors populated'
 
 INSERT INTO Borrower ([Name],[Address])
@@ -215,15 +251,15 @@ VALUES
 PRINT 'dbo.Borrower populated'
 
 /*
-USE MASTER
-  DROP DATABASE dbTechAcadLibrary
-  DROP TABLE Book_Loans
-  DROP TABLE Book_Copies
-  DROP TABLE Borrower
-  DROP TABLE Library_Branch
-  DROP TABLE Publisher
-  DROP TABLE Book
-
-
+FOR TESTING
+	USE MASTER
+	DROP DATABASE dbTechAcadLibrary
+	DROP TABLE Book_Loans
+	DROP TABLE Book_Copies
+	DROP TABLE Borrower
+	DROP TABLE Library_Branch
+	DROP TABLE Book_Authors
+	DROP TABLE Book
+	DROP TABLE Publisher
 */
   
