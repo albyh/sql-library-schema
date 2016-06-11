@@ -5,6 +5,8 @@ IF NOT EXISTS (SELECT * FROM sys.databases WHERE [name] = 'dbTechAcadLibrary')
 
 USE dbTechAcadLibrary
 
+CREATE SCHEMA [TechAcad] AUTHORIZATION [dbo]
+
 --Create TABLES if NOT EXISTS
 IF object_id('Book','U') IS NOT NULL
 	DROP TABLE Book
@@ -147,33 +149,33 @@ INSERT INTO Book_Authors VALUES
 (26, 'Stephen King')
 PRINT 'dbo.Authors populated'
 
-INSERT INTO Borrower ([CardNo],[Name])
+INSERT INTO Borrower ([CardNo],[Name],[Address])
 VALUES 
-(1001, 'Imma Reader'),
-(1002, 'Timmy Kindle'),
-(1003, 'Betty Simmons'),
-(1004, 'Marcus Lee'),
-(1005, 'Jane Austen'),
-(1006, 'Stephenie Meyer'),
-(1007, 'George Orton'),
-(1008, 'Martin Zell'),
-(1009, 'Sheila Wozniak'),
-(1010, 'Dan Smith'),
-(1011, 'John Dunn'),
-(1012, 'Terry Dunn'),
-(1013, 'Candy Cane'),
-(1014, 'Joyce Allison'),
-(1015, 'Freddy Krueger'),
-(1016, 'Minnie Mouse'),
-(1017, 'George Carlin'),
-(1018, 'Marcus Aurelius'),
-(1019, 'Felix Unger'),
-(1020, 'Betty Rubble'),
-(1021, 'John Slate'),
-(1022, 'Gary Gumbel'),
-(1023, 'Rudolph Valentino'),
-(1024, 'Steve McQueen'),
-(1025, 'Gary Carter')
+(1001, 'Imma Reader', '2464 NE Division St'),
+(1002, 'Timmy Kindle', '43 N Smith Ave.'),
+(1003, 'Betty Simmons', '2523 NE Market St.'),
+(1004, 'Marcus Lee', '24 N Williams Ave.'),
+(1005, 'Jane Austen', '6543 NE Denton St.'),
+(1006, 'Stephenie Meyer', '240 SE Swail Ave.'),
+(1007, 'George Orton', '2308 SE Greystone St.'),
+(1008, 'Martin Zell', '953 SE Carlton Ave.'),
+(1009, 'Sheila Wozniak', '2021 SE Milwaukie Ave'),
+(1010, 'Dan Smith', '2409 SW 45th Ave.'),
+(1011, 'John Dunn', '9953 SW 24th Ave.'),
+(1012, 'Terry Dunn', '08 SW River Pkwy'),
+(1013, 'Candy Cane', '493 SW Hood St.'),
+(1014, 'Joyce Allison', '4089 SW Tanager Dr.'),
+(1015, 'Freddy Krueger', '23049 NW Moonbeam Ln.'),
+(1016, 'Minnie Mouse', '3409 NW Tacoma St.'),
+(1017, 'George Carlin', '8984 NW Miller Rd.'),
+(1018, 'Marcus Aurelius', '8842 NW Cornelius St.'),
+(1019, 'Felix Unger', '23445 NE Betheny Ave.'),
+(1020, 'Betty Rubble', '409 SE Stone Ln.'),
+(1021, 'John Slate', '492 SE Bonita Rd.'),
+(1022, 'Gary Gumbel', '0459 SW Livery Rd.'),
+(1023, 'Rudolph Valentino', '893 SE Tonaka Rd.'),
+(1024, 'Steve McQueen', '8349 NW Broadway Ave.'),
+(1025, 'Gary Carter', '408 NW Beaverton Rd.')
 PRINT 'dbo.Borrower populated'
 
   
