@@ -9,7 +9,7 @@ USE dbTechAcadLibrary
 
 /*
 CREATE SCHEMA [TechAcad] AUTHORIZATION [dbo]
-GO
+--GO
 */
 
 --Create TABLES 

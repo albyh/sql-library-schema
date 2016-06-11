@@ -52,10 +52,22 @@ ORDER BY 3 DESC
 
 --7. For each book by "Stephen King", retrieve the title and the number of
 --copies owned by the library branch whose name is "Central"
-SELECT sum( bc.No_Of_Copies) '# Copies of', bk.Title 'this book ', ba.AuthorName 'written by', lb.BranchName 'owned by this branch'
+SELECT bc.No_Of_Copies '# Copies of', bk.Title 'this book ', ba.AuthorName 'written by', lb.BranchName 'owned by this branch'
 FROM Book_Copies bc
 INNER JOIN Book bk ON bk.BookId = bc.BookId
 INNER JOIN Book_Authors ba ON bk.BookId = ba.BookId
 INNER JOIN Library_Branch lb ON lb.BranchId = bc.BranchId
 WHERE ba.AuthorName = 'Stephen King' AND bc.BranchId = 13000
-GROUP BY bk.Title, bc.No_Of_Copies,lb.BranchName,ba.AuthorName
+
+
+/*
+--TESTING. For each book by "Stephen King", retrieve the title and the number of
+--copies owned by ALL library branches
+SELECT sum( bc.No_Of_Copies) 'Total Copies of', bk.Title 'this book ', ba.AuthorName 'written by', lb.BranchName 'owned by this branch'
+FROM Book_Copies bc
+INNER JOIN Book bk ON bk.BookId = bc.BookId
+INNER JOIN Book_Authors ba ON bk.BookId = ba.BookId
+INNER JOIN Library_Branch lb ON lb.BranchId = bc.BranchId
+WHERE ba.AuthorName = 'Stephen King' 
+GROUP BY bk.Title, ba.AuthorName, lb.BranchName
+*/
